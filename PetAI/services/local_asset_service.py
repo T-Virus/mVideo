@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import uuid
 from pathlib import Path
@@ -180,6 +181,111 @@ class LocalAssetService:
             self.mark_used(asset["asset_id"])
         logger.info("本地优先选取 %d 个素材（候选 %d 个）", len(selected), len(candidates))
         return selected
+
+    # ---------- 按分镜配素材 ----------
+    def plan_for_storyboard(
+        self,
+        storyboard: list[dict[str, Any]],
+        animal: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """按分镜顺序为每个镜头配一个素材。
+
+        优先用 asset_keyword 与 tags/文件名匹配；匹配不到就用同类素材轮换。
+        素材不足时允许重复，但尽量错开，避免整条视频只有同一个画面。
+        """
+        usable = [
+            asset
+            for asset in self.list_assets(animal=animal)
+            if asset.get("kind") in ("video", "image")
+            and Path(asset.get("path", "")).is_file()
+        ]
+        if not usable:
+            return []
+
+        plan: list[dict[str, Any]] = []
+        used: set[str] = set()
+        for index, scene in enumerate(storyboard or []):
+            if not isinstance(scene, dict):
+                continue
+            keyword = str(scene.get("asset_keyword") or "").strip()
+            best = self._best_asset(usable, keyword, used)
+            if best is None:
+                best = self._next_unused(usable, used) or usable[index % len(usable)]
+            score = self._match_score(best, keyword) if keyword else 0
+            plan.append(
+                {
+                    "path": best["path"],
+                    "kind": best.get("kind", "video"),
+                    "asset_id": best.get("asset_id", ""),
+                    "scene": str(scene.get("scene") or index + 1),
+                    "keyword": keyword,
+                    "matched": score > 0,
+                }
+            )
+            used.add(best["path"])
+        for item in plan:
+            if item.get("asset_id"):
+                self.mark_used(item["asset_id"])
+        logger.info(
+            "按分镜配素材：%d 个镜头，本地可用素材 %d 个", len(plan), len(usable)
+        )
+        return plan
+
+    # 这些词几乎所有宠物素材都有，不能作为"精准匹配"依据，否则每张都算命中。
+    _GENERIC_WORDS = {
+        "cat", "cats", "dog", "dogs", "pet", "pets", "animal", "animals",
+        "video", "image", "photo", "clip", "footage", "猫咪", "狗狗", "宠物",
+    }
+
+    @classmethod
+    def _match_score(cls, asset: dict[str, Any], keyword: str) -> int:
+        words = [
+            word
+            for word in re.split(r"[\s,;/]+", keyword.lower())
+            if len(word) > 1 and word not in cls._GENERIC_WORDS
+        ]
+        if not words:
+            return 0
+        haystack = " ".join(
+            [
+                str(asset.get("filename", "")),
+                " ".join(str(t) for t in asset.get("tags", [])),
+                str(asset.get("category", "")),
+            ]
+        ).lower()
+        return sum(1 for word in words if word in haystack)
+
+    def _best_asset(
+        self, assets: list[dict[str, Any]], keyword: str, used: set[str]
+    ) -> dict[str, Any] | None:
+        if not keyword:
+            return None
+        scored: list[tuple[int, dict[str, Any]]] = []
+        for asset in assets:
+            score = self._match_score(asset, keyword)
+            if score > 0:
+                scored.append((score, asset))
+        if not scored:
+            return None
+        # 同分时优先没用过的、使用次数少的，避免整条视频反复用同一张。
+        scored.sort(
+            key=lambda pair: (
+                pair[0],
+                pair[1]["path"] not in used,
+                -int(pair[1].get("usage_count", 0) or 0),
+            ),
+            reverse=True,
+        )
+        return scored[0][1]
+
+    @staticmethod
+    def _next_unused(
+        assets: list[dict[str, Any]], used: set[str]
+    ) -> dict[str, Any] | None:
+        unused = [asset for asset in assets if asset["path"] not in used]
+        if not unused:
+            return None
+        return min(unused, key=lambda a: int(a.get("usage_count", 0) or 0))
 
     # ---------- 网络素材闸门 ----------
     def assert_network_asset_allowed(self, license_info: str = "") -> None:

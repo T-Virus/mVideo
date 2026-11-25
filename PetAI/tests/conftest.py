@@ -32,10 +32,19 @@ def temp_db(tmp_path, monkeypatch):
 
 @pytest.fixture
 def base_config(tmp_path):
-    """默认配置：付费服务关闭，DeepSeek/本地TTS开启，Key 由环境变量注入。"""
+    """测试配置：付费服务关闭。
+
+    产品默认文本引擎是桌面豆包，但 GUI 自动化不适合在单元测试里跑，
+    因此这里显式切到 DeepSeek 以复用离线 MockDeepSeek；
+    豆包引擎行为由 test_local_only_mode.py / test_doubao_script_and_sapi.py 单独覆盖。
+    """
     env = tmp_path / ".env"
     env.write_text("DEEPSEEK_API_KEY=sk-test-secret-key-1234567890\n", encoding="utf-8")
     cfg = PetConfig(env_path=env, config_path=tmp_path / "petai.toml")
+    # 单元测试不启动 GUI：脚本引擎固定为离线 mock 的 DeepSeek。
+    # 豆包脚本引擎的行为在 test_doubao_script_and_sapi.py 中单独覆盖。
+    cfg.data["script"]["engine"] = "deepseek"
+    cfg.data["tts"]["engine"] = "piper"
     return cfg
 
 
@@ -150,6 +159,7 @@ def video_svc(base_config, guard, tmp_path, tts_svc, subtitle_svc):
         storage_root=tmp_path / "exports",
         combine_videos=fake_combine,
         generate_video=fake_generate,
+        image_transcode=False,  # 离线测试不真实编码；图片转码有独立测试覆盖
     )
     svc.calls = calls
     return svc

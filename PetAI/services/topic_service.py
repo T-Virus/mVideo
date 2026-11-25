@@ -1,7 +1,8 @@
 """宠物选题中心（任务书模块 3）。
 
-支持：手动新增、AI 批量生成、按猫/狗筛选、按科普/娱乐/用品筛选、
-收藏、状态管理、关联素材。所有 AI 生成走 DeepSeek 闸门并记录成本。
+支持：手动新增、豆包批量生成、按猫/狗筛选、按科普/娱乐/用品筛选、
+收藏、状态管理、关联素材。文本生成统一走本机免费豆包客户端；
+豆包失败时明确报错，绝不偷偷回退到付费 DeepSeek。
 """
 from __future__ import annotations
 
@@ -30,10 +31,29 @@ class TopicService:
     TABLE = "topics"
     KEY = "topic_id"
 
-    def __init__(self, config: Any, guard: CostGuard, deepseek: Any) -> None:
+    def __init__(
+        self, config: Any, guard: CostGuard, deepseek: Any, doubao_scripts: Any = None
+    ) -> None:
         self.config = config
         self.guard = guard
         self.deepseek = deepseek
+        self.doubao_scripts = doubao_scripts
+
+    @property
+    def text_engine(self) -> str:
+        """文本生成引擎：默认豆包桌面客户端；手动改配置才可用 deepseek。"""
+        engine = str(
+            self.config.get("script", "engine", "doubao-desktop") or "doubao-desktop"
+        ).strip()
+        return engine if engine in ("doubao-desktop", "deepseek") else "doubao-desktop"
+
+    def _generate_json(self, prompt: str, task_id: str = "") -> dict[str, Any]:
+        """按统一引擎生成 JSON；豆包失败不回退付费服务。"""
+        if self.text_engine == "doubao-desktop":
+            if self.doubao_scripts is None:
+                raise RuntimeError("已选择豆包文本引擎，但未注入 DoubaoScriptService。")
+            return self.doubao_scripts.generate_json(prompt, task_id=task_id)
+        return self.deepseek.generate_json(prompt, task_id=task_id)
 
     # ---------- 手动新增 ----------
     def create(
@@ -155,7 +175,7 @@ class TopicService:
         content_type: str | None = None,
         task_id: str = "",
     ) -> list[dict[str, Any]]:
-        """用 DeepSeek 批量生成选题。失败时抛错，绝不切换到其他付费服务。"""
+        """用本机豆包批量生成选题（免费）。失败时抛错，绝不切换到付费服务。"""
         if count < 1 or count > 30:
             raise ValueError("count 需在 1~30 之间")
         if animal_type not in ANIMALS:
@@ -177,10 +197,10 @@ class TopicService:
             ctype=type_hint,
             cats=category_hint,
         )
-        data = self.deepseek.generate_json(prompt, task_id=task_id)
+        data = self._generate_json(prompt, task_id=task_id)
         items = data.get("topics") if isinstance(data, dict) else None
         if not isinstance(items, list) or not items:
-            raise RuntimeError("DeepSeek 未返回有效选题列表，请手动新增或重试")
+            raise RuntimeError("豆包未返回有效选题列表，请手动新增或重试；不会改用付费服务")
 
         created: list[dict[str, Any]] = []
         for item in items[:count]:

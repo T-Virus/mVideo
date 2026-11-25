@@ -2,8 +2,9 @@
 # 复制为 petai.toml 后生效。此文件不含任何 API Key（Key 只在 .env / 环境变量）。
 
 [services]
-# 付费服务默认关闭，DeepSeek 是唯一默认开启的付费 AI 服务
-deepseek = true
+# 全链路「豆包 + 本地」：所有付费服务默认关闭，DeepSeek 也不例外。
+# 不需要任何 API Key；想恢复付费 API 需手动改这里和 [script].engine。
+deepseek = false
 ai_image = false
 ai_video = false
 online_tts = false
@@ -12,6 +13,7 @@ local_tts = true
 network_asset = false
 local_asset_first = true
 
+# 以下 [deepseek] 与 [pricing] 仅在手动启用付费 API 时用于计费审计；默认不读取。
 [deepseek]
 base_url = "https://api.deepseek.com"
 # 官方当前模型：deepseek-flash / deepseek-v4-pro（可用 list_models() 核对）。
@@ -40,14 +42,20 @@ input_per_million = 0.66
 output_per_million = 1.98
 input_cache_hit_per_million = 0.022
 
-# ===== 本地配音（Piper）=====
-# Piper 引擎未在项目中预装：未检测到时 PetAI 会明确报错并提示上传配音，
-# 绝不会自动切换到在线/付费 TTS。请自行安装 Piper 并下载合规许可的声音模型。
+# ===== 文本生成引擎（脚本 / 选题 / 知识整理统一）=====
+# doubao-desktop = 本机免费豆包客户端（默认，不产生 API 费用）
+# deepseek       = 付费 API，需同时把上面 [services].deepseek 改为 true
+# 豆包生成失败会明确报错，绝不偷偷回退到付费服务。
+[script]
+engine = "doubao-desktop"
+
 [tts]
-engine = "piper"
+engine = "sapi"              # sapi=Windows 自带离线语音（零成本）；piper=需模型
 piper_executable = ""        # 留空则从 PATH 查找；也可填绝对路径
 piper_model_zh = ""          # 中文语音模型 .onnx 路径（如 zh_CN-huayan-medium）
 piper_model_en = ""          # 英文语音模型 .onnx 路径（如 en_US-lessac-medium）
+sapi_voice_zh = ""           # 留空用 Microsoft Huihui（中文，系统自带）
+sapi_voice_en = ""           # 留空用 Microsoft Zira（英文，系统自带）
 volume = 1.0
 rate = 1.0
 allow_upload_fallback = true # Piper 不可用时允许用户上传自己的配音
@@ -62,3 +70,38 @@ font_name = "STHeitiMedium.ttc"
 subtitle_enabled = true
 bgm_type = "random"          # 使用 MPT 内置本地 BGM，非付费服务
 logo_path = ""               # 品牌 Logo（可选）
+# 时长自动对齐：以真实配音为唯一时间基准，字幕/成片末尾都对齐到音频
+auto_align = true
+align_tolerance = 0.3        # 秒；超过该偏差才触发成片裁剪
+
+# ===== 桌面免费豆包客户端（默认素材与脚本来源）=====
+# 用 GUI 自动化操作本机已登录的豆包，生成图片/视频/脚本后自动入库或写库。
+# 不走 API、不需要 Key、不产生 API 费用；依赖：pip install pyautogui pyperclip
+# 豆包没有公开接口，界面改版后需更新 coords（坐标基于 1920×1080）。
+[doubao]
+executable = ""               # 留空则自动探测 D:\Tools\Doubao 等常见路径
+download_dir = ""             # 留空用 ~/Downloads
+image_wait_seconds = 45       # 图片生成等待秒数（实测约 38s，别设太小）
+video_wait_seconds = 180      # 视频生成等待秒数（免费额度/排队由豆包决定）
+script_wait_seconds = 25      # 脚本生成等待秒数
+# [doubao.coords]
+# input = [900, 965]          # 输入框文本区中心
+# send = [1416, 985]          # 发送按钮（输入框右下角）
+# image_mode = [471, 993]     # 图像生成技能标签
+# video_mode = [1056, 993]    # 视频生成技能标签
+# download = [1855, 120]      # 预览面板下载按钮
+# script_copy = [631, 848]    # AI 回复"复制"图标（短回复）
+# script_reply = [980, 500]   # 回复正文点击位置（长回复回退用）
+# new_chat = [272, 52]        # 窗口左上角笔形「新建对话」
+# close_preview = [1900, 70]  # 预览关闭按钮
+
+# ===== 近 N 天热门选题（豆包联网检索，仅作趋势参考）=====
+[hot]
+lookback_days = 7             # 检索最近多少天
+plan_count = 3                # 每次生成几个候选方向
+wait_seconds = 120            # 联网检索较慢，轮询最多等这么久
+
+# ===== 一键生产默认参数 =====
+[pipeline]
+image_count = 6               # 按分镜生成素材的张数
+with_english = true           # 是否同时生成英文版

@@ -1,0 +1,120 @@
+{
+  "assets": [
+    {
+      "asset_id": "ba316bb59e364d9b823524e8d218bf22",
+      "filename": "猫咪爱纸箱的原因 (1).png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\猫咪爱纸箱的原因 (1).png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪爱纸箱的原因 (1).png",
+      "tags": [
+        "e2e-test",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 10,
+      "created_at": "2026-11-25T12:13:27"
+    },
+    {
+      "asset_id": "bf2408ed2e474b42b093f39a6b5e3c8e",
+      "filename": "橘猫钻纸箱.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\橘猫钻纸箱.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\橘猫钻纸箱.png",
+      "tags": [
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T17:41:01"
+    },
+    {
+      "asset_id": "6edd9ebcffff48c3bcb1b5d52329ee74",
+      "filename": "橘猫窗边晒太阳写实摄影.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\橘猫窗边晒太阳写实摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\橘猫窗边晒太阳写实摄影.png",
+      "tags": [
+        "scene-1",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T17:42:44"
+    },
+    {
+      "asset_id": "2923b50db9b346ea8b9e5bf82a2565a0",
+      "filename": "橘猫玩毛线球特写.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\橘猫玩毛线球特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\橘猫玩毛线球特写.png",
+      "tags": [
+        "scene-2",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T17:43:39"
+    },
+    {
+      "asset_id": "6cac60248d1d459cbc2e929a8b4475a0",
+      "filename": "猫咪脸部特写摄影.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪脸部特写摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪脸部特写摄影.png",
+      "tags": [
+        "scene-1",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T17:45:41"
+    },
+    {
+      "asset_id": "2bb171499b364a6483b3b7ed74b160ca",
+      "filename": "猫咪慢眨眼写实摄影.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪慢眨眼写实摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪慢眨眼写实摄影.png",
+      "tags": [
+        "scene-2",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T17:46:36"
+    },
+    {
+      "asset_id": "5b04e930c38f440783b07aaddba018df",
+      "filename": "竖屏写实猫咪特写.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\竖屏写实猫咪特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\竖屏写实猫咪特写.png",
+      "tags": [
+        "scene-3",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T17:47:32"
+    }
+  ]
+}

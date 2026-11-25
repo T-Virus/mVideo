@@ -42,10 +42,21 @@ class KnowledgeService:
     TABLE = "knowledge"
     KEY = "knowledge_id"
 
-    def __init__(self, config: Any, guard: CostGuard, deepseek: Any) -> None:
+    def __init__(
+        self, config: Any, guard: CostGuard, deepseek: Any, doubao_scripts: Any = None
+    ) -> None:
         self.config = config
         self.guard = guard
         self.deepseek = deepseek
+        self.doubao_scripts = doubao_scripts
+
+    @property
+    def text_engine(self) -> str:
+        """文本生成引擎：默认豆包桌面客户端；手动改配置才可用 deepseek。"""
+        engine = str(
+            self.config.get("script", "engine", "doubao-desktop") or "doubao-desktop"
+        ).strip()
+        return engine if engine in ("doubao-desktop", "deepseek") else "doubao-desktop"
 
     # ---------- 风险分级 ----------
     @staticmethod
@@ -243,7 +254,7 @@ class KnowledgeService:
 
     # ---------- AI 辅助（不编造来源）----------
     def ai_organize(self, knowledge_id: str, task_id: str = "") -> dict[str, Any]:
-        """用 DeepSeek 整理知识表述。仅改写已有正文，不生成任何参考文献。"""
+        """用本机豆包整理知识表述（免费）。仅改写已有正文，不生成任何参考文献。"""
         row = self.get(knowledge_id)
         if not row:
             raise ValueError("知识不存在")
@@ -257,8 +268,25 @@ class KnowledgeService:
             "- 只输出改写后的正文，不要输出其他内容。\n\n"
             f"正文：{row['content']}"
         )
-        organized = self.deepseek.generate(prompt, task_id=task_id)
-        repo.update(self.TABLE, self.KEY, knowledge_id, {"content": organized.strip()})
+        if self.text_engine == "doubao-desktop":
+            if self.doubao_scripts is None:
+                raise RuntimeError("已选择豆包文本引擎，但未注入 DoubaoScriptService。")
+            json_prompt = (
+                prompt
+                + '\n\n输出严格 JSON：{"content":"改写后的正文"}，不要输出 JSON 之外的文字。'
+            )
+            data = self.doubao_scripts.generate_json(json_prompt, task_id=task_id)
+            organized = str(
+                data.get("content") or data.get("text") or data.get("script") or ""
+            ).strip()
+            if not organized:
+                raise RuntimeError("豆包未返回整理后的正文；不会改用付费服务")
+        else:
+            organized = self.deepseek.generate(prompt, task_id=task_id)
+        organized = organized.strip()
+        if not organized:
+            raise RuntimeError("知识整理结果为空，已保留原正文")
+        repo.update(self.TABLE, self.KEY, knowledge_id, {"content": organized})
         # 改写后仍保持待审核（AI 不能自批）
         repo.update(self.TABLE, self.KEY, knowledge_id, {"review_status": REVIEW_PENDING})
         return self.get(knowledge_id)

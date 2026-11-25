@@ -1,9 +1,9 @@
-"""PetAI 命令行工具：初始化、连接测试、状态查看。
+"""PetAI 命令行工具：初始化、状态查看、可选付费连接测试。
 
 用法：
   python -m PetAI.cli init          # 初始化数据库与配置模板
-  python -m PetAI.cli status        # 查看成本控制中心状态
-  python -m PetAI.cli test-deepseek # 测试 DeepSeek 连接（需先配置 .env）
+  python -m PetAI.cli status        # 查看本地引擎与付费闸门状态（默认应全部关闭）
+  python -m PetAI.cli test-deepseek # 仅在你手动启用 DeepSeek 后使用
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ def cmd_init() -> int:
     env_target = PROJECT_ROOT / ".env"
     if not env_target.exists() and env_tpl.exists():
         shutil.copy2(env_tpl, env_target)
-        print(f"[init] 已创建 .env 模板: {env_target}（请填入 DEEPSEEK_API_KEY）")
+        print(f"[init] 已创建 .env 模板: {env_target}（默认方案无需填写 Key）")
     else:
         print(f"[init] .env 已存在或模板缺失，跳过")
     print(f"[init] 数据库就绪: {db}")

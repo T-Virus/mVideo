@@ -1,9 +1,11 @@
 """Pet AI Content Factory 配置加载层。
 
 设计原则（对应任务书模块 1 / 模块 2）：
-1. 付费服务默认全部关闭，DeepSeek 默认开启（唯一默认付费 AI 服务）。
-2. API Key 只从环境变量或 .env 读取，绝不写入配置文件、前端代码或日志。
-3. 模型价格表从 petai.toml 读取，不硬编码在代码中。
+1. 全链路默认「桌面豆包 + 本地」：所有付费服务（含 DeepSeek）默认关闭，
+   文本生成走本机豆包客户端，配音走系统 SAPI，字幕/合成/发布包全部本地。
+2. API Key 只从环境变量或 .env 读取，绝不写入配置文件、前端代码或日志；
+   默认方案不需要任何 API Key。
+3. 模型价格表从 petai.toml 读取，不硬编码在代码中（仅供手动启用付费服务时审计）。
 4. 本模块不修改 MoneyPrinterTurbo 原有 config.toml，保证原项目配置兼容性。
 """
 from __future__ import annotations
@@ -47,10 +49,12 @@ API_KEY_ENV = {
     Service.ONLINE_TTS: "PETAI_ONLINE_TTS_API_KEY",
 }
 
-# 默认值：付费服务关闭，DeepSeek 与本地 TTS 开启，本地素材优先。
+# 默认值：所有付费服务（含 DeepSeek）关闭；文本生成走豆包，配音走 SAPI，本地素材优先。
+# 想恢复付费 API：手动把 petai.toml 的 [services].deepseek 与 [script].engine 改回即可，
+# 系统绝不会自动开启、也不会在豆包失败时偷偷回退到付费服务。
 DEFAULT_CONFIG: dict[str, Any] = {
     "services": {
-        "deepseek": True,
+        "deepseek": False,
         "ai_image": False,
         "ai_video": False,
         "online_tts": False,
@@ -72,13 +76,21 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "peak_hours_utc": [1, 2, 3, 6, 7, 8, 9],
         "peak_multiplier": 2.0,
     },
-    # 本地 TTS（Piper）：默认启用本地；Piper 未安装时允许上传配音兜底。
+    # 文本生成引擎（脚本 / 选题 / 知识整理统一）：
+    # doubao-desktop = 本机免费豆包客户端（默认）；deepseek = 付费 API（需手动开启）。
+    # 豆包朗读不导出音频，故配音改用 Windows SAPI5 离线语音（sapi）。
+    "script": {
+        "engine": "doubao-desktop",   # doubao-desktop / deepseek
+    },
+    # 本地 TTS：piper（需模型）/ sapi（Windows 自带，零成本）/ uploaded（用户文件）。
     # 绝不自动切换到在线/付费 TTS。模型许可证与语言支持单独记录。
     "tts": {
-        "engine": "piper",            # piper / uploaded（只影响默认尝试顺序）
+        "engine": "sapi",             # sapi / piper / uploaded
         "piper_executable": "",       # 留空则从 PATH 查找 piper
         "piper_model_zh": "",         # 中文模型 .onnx 路径（用户自行下载）
         "piper_model_en": "",         # 英文模型 .onnx 路径
+        "sapi_voice_zh": "",          # 留空用 Microsoft Huihui（中文，系统自带）
+        "sapi_voice_en": "",          # 留空用 Microsoft Zira（英文，系统自带）
         "volume": 1.0,
         "rate": 1.0,
         "allow_upload_fallback": True,
@@ -93,6 +105,30 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "subtitle_enabled": True,
         "bgm_type": "random",
         "logo_path": "",              # 品牌 Logo（可选，需 MPT 支持图层）
+        # 自动对齐：以真实配音时长为准，字幕末尾与成片末尾都对齐到音频。
+        "auto_align": True,
+        "align_tolerance": 0.3,       # 秒；超过容差才触发成片重编码裁剪
+    },
+    # 桌面免费豆包客户端素材生成（GUI 自动化，不走 API、不产生 API 费用）。
+    # 依赖 pyautogui / pyperclip；坐标为 1920×1080 基准，其他分辨率按比例缩放。
+    "doubao": {
+        "executable": "",             # 留空则自动探测常见安装路径
+        "download_dir": "",           # 留空则用 ~/Downloads
+        "image_wait_seconds": 45,     # 图片生成等待秒数（实测约 38s，留余量）
+        "video_wait_seconds": 180,    # 视频生成等待秒数（免费额度/排队由豆包决定）
+        "script_wait_seconds": 25,    # 脚本生成等待秒数（按豆包速度调整）
+        "coords": {},                 # 覆盖 DEFAULT_COORDS 中的坐标
+    },
+    # 近 N 天热门选题（豆包联网检索，仅作趋势参考）。
+    "hot": {
+        "lookback_days": 7,
+        "plan_count": 3,
+        "wait_seconds": 120,         # 联网检索比普通脚本慢，轮询最多等这么久
+    },
+    # 一键生产默认参数。
+    "pipeline": {
+        "image_count": 6,            # 按分镜生成的素材张数
+        "with_english": True,
     },
     # 价格表：官方美元价 / 1M tokens（非高峰、cache miss 为基准）。
     # 不在代码中写死；无条目时费用记为 0 并标记「估算」。请定期核对官方定价页。
@@ -238,14 +274,21 @@ class PetConfig:
         """给界面/API 使用的脱敏视图，任何 Key 都不会出现。"""
         return {
             "services": dict(self.data.get("services", {})),
+            "text_engine": self.get("script", "engine", "doubao-desktop"),
             "deepseek": {
                 "base_url": self.get("deepseek", "base_url"),
                 "model": self.get("deepseek", "model"),
                 "configured": self.has_api_key(Service.DEEPSEEK),
+                "enabled": self.is_enabled(Service.DEEPSEEK),
+            },
+            "doubao": {
+                "script_wait_seconds": self.get("doubao", "script_wait_seconds", 25),
+                "image_wait_seconds": self.get("doubao", "image_wait_seconds", 30),
+                "video_wait_seconds": self.get("doubao", "video_wait_seconds", 180),
             },
             "pricing": dict(self.data.get("pricing", {})),
             "tts": {
-                "engine": self.get("tts", "engine", "piper"),
+                "engine": self.get("tts", "engine", "sapi"),
                 "piper_configured": bool(self.get("tts", "piper_executable", "")),
                 "volume": self.get("tts", "volume", 1.0),
                 "rate": self.get("tts", "rate", 1.0),

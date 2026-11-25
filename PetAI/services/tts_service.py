@@ -39,6 +39,7 @@ class TTSService:
     ) -> None:
         self.config = config
         self.guard = guard
+        self.sapi: Any = None  # 延迟注入：Windows SAPI5 离线配音（Piper 的免费替代）
         self.audio_root = (
             Path(storage_root) if storage_root else (PETAI_ROOT / "storage" / "audio")
         )
@@ -52,6 +53,8 @@ class TTSService:
             "online_tts_enabled": self.config.is_enabled(Service.ONLINE_TTS),
             "piper_available": self.piper_available(),
             "upload_fallback": bool(self.config.get("tts", "allow_upload_fallback", True)),
+            "engine_configured": str(self.config.get("tts", "engine", "piper") or "piper"),
+            "sapi_available": bool(self.sapi and self.sapi.capabilities().get("available")),
             "engine_license": PIPER_ENGINE_LICENSE,
             "models": PIPER_MODEL_LICENSES,
             "note": (
@@ -145,6 +148,22 @@ class TTSService:
                 "engine": "none",
                 "path": str(vf),
             }
+
+        # 引擎选择：piper（需模型）/ sapi（Windows 自带，零成本）。
+        engine = str(self.config.get("tts", "engine", "piper") or "piper").strip().lower()
+        volume = float(self.config.get("tts", "volume", 1.0))
+        rate = float(self.config.get("tts", "rate", 1.0))
+        if engine == "sapi" or (not self.piper_available() and self.sapi is not None):
+            if self.sapi is None:
+                raise LocalTTSNotAvailable(
+                    "已选择 SAPI 配音但未注入服务；请检查 bootstrap 装配。"
+                )
+            result = self.sapi.synthesize(
+                text, language=language, output_file=output_file,
+                rate=rate, volume=volume,
+            )
+            logger.info("SAPI 本地配音完成 lang=%s file=%s task=%s", language, result["path"], task_id)
+            return result
 
         # 本地 Piper。
         exe = self._piper_executable()

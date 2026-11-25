@@ -128,6 +128,7 @@ CREATE TABLE IF NOT EXISTS productions (
     material_paths TEXT NOT NULL DEFAULT '[]',        -- JSON 数组
     output_path    TEXT NOT NULL DEFAULT '',
     tts_source     TEXT NOT NULL DEFAULT '',          -- piper-local / uploaded
+    alignment_report TEXT NOT NULL DEFAULT '{}',      -- 音频/字幕/视频时长对齐报告 JSON
     error          TEXT NOT NULL DEFAULT '',
     created_at     TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at     TEXT NOT NULL DEFAULT (datetime('now'))
@@ -170,6 +171,14 @@ def initialize_database(db_path: Path | str | None = None) -> Path:
         ]:
             if col not in {r[1] for r in conn.execute("PRAGMA table_info(cost_records)").fetchall()}:
                 conn.execute(f"ALTER TABLE cost_records ADD COLUMN {col} {ddl}")
+        # 幂等迁移：兼容早期没有对齐报告的库
+        if "alignment_report" not in {
+            r[1] for r in conn.execute("PRAGMA table_info(productions)").fetchall()
+        }:
+            conn.execute(
+                "ALTER TABLE productions ADD COLUMN alignment_report "
+                "TEXT NOT NULL DEFAULT '{}'"
+            )
         conn.commit()
     finally:
         conn.close()

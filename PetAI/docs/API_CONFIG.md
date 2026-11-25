@@ -1,12 +1,17 @@
 # API 与本地服务配置说明
 
-## 1. DeepSeek（唯一默认付费 AI 服务）
+> 默认方案是 **「桌面豆包 + 本地」**：文本用豆包、配音用 SAPI、字幕/合成/发布包本地完成。
+> **不需要任何 API Key，也不会产生 API 费用。** 本文件中 DeepSeek 与 Piper 均为可选进阶配置。
 
-### 配置
-在项目根目录 `.env`：
+## 1. DeepSeek（默认关闭，可选）
+
+### 启用方式（确认要付费才做）
+1. 编辑 `PetAI/config/petai.toml`：`[services].deepseek = true`，`[script].engine = "deepseek"`。
+2. 在项目根目录 `.env` 填入 Key：
 ```
 DEEPSEEK_API_KEY=sk-你的真实密钥
 ```
+不启用时 PetAI 不会读取 Key，也不会发起任何请求。
 - Key 只从环境变量或 `.env` 读取；`.env` 已被 gitignore；日志有脱敏过滤。
 - `DEEPSEEK_BASE_URL`、`DEEPSEEK_MODEL` 可选，实际以 `PetAI/config/petai.toml` 的 `[deepseek]` 段为准。
 
@@ -38,12 +43,13 @@ petai.cmd test-deepseek
 ```
 会发一条极短真实请求（记一笔 Token 账），返回模型名、回复、Token、费用、是否估算。
 
-## 2. 本地 TTS（Piper）
+## 2. 本地 TTS（默认 SAPI，Piper 可选）
 
 ### 状态
-本机当前 **Piper 未安装**、系统 PATH 无 `piper`。PetAI 此时默认走"上传配音兜底"，绝不调用在线/付费 TTS。
+默认引擎是 **Windows 系统自带 SAPI5**（中文 Huihui / 英文 Zira），完全离线、零费用、无需下载模型。
+Piper 未安装，作为可选进阶引擎保留；两者都不可用时才走"上传配音兜底"，绝不调用在线/付费 TTS。
 
-### 启用 Piper（可选）
+### 启用 Piper（可选，需切换引擎）
 1. 安装 Piper（rhasspy/piper），得到可执行文件（如 `piper.exe`）。
 2. 下载合规许可的声音模型（`.onnx` + `.json`），例如：
    - 中文：`zh_CN-huayan-medium`
@@ -72,6 +78,7 @@ Piper 不可用时，用 `app.tts.upload_voice()` 或 `video.produce(voice_file=
 
 - 不需要单独安装：原项目 `imageio-ffmpeg==0.6.0` 提供内置二进制。
 - PetAI 通过复用 `app.utils.utils.get_ffmpeg_binary()` 解析（PATH → 内置二进制）。
+- 用途：视频合成、时长裁剪/补齐，以及把豆包生成的**图片素材转成 9:16 静帧视频**（`clip_duration` 默认 5 秒）。
 - 如需指定：`set IMAGEIO_FFMPEG_EXE=D:/path/to/ffmpeg.exe`。
 
 ## 4. 字幕
@@ -81,7 +88,7 @@ Piper 不可用时，用 `app.tts.upload_voice()` 或 `video.produce(voice_file=
 
 ## 5. 付费服务闸门（重要）
 
-所有付费服务调用前必须过 `CostGuard.require()`：
+默认配置下 `[services]` 全部为 `false`（含 DeepSeek）。所有付费服务调用前必须过 `CostGuard.require()`：
 - 服务关闭 → 抛 `ServiceDisabledError`，不调用。
 - 已开启但缺 Key → 抛 `MissingCredentialError`，不切换别家。
 - 调用失败 → `assert_no_fallback()` 留痕并明确拒绝回退。
