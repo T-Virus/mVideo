@@ -1,0 +1,64 @@
+# Pet AI Content Factory 配置模板
+# 复制为 petai.toml 后生效。此文件不含任何 API Key（Key 只在 .env / 环境变量）。
+
+[services]
+# 付费服务默认关闭，DeepSeek 是唯一默认开启的付费 AI 服务
+deepseek = true
+ai_image = false
+ai_video = false
+online_tts = false
+local_tts = true
+# 网络素材下载默认关闭；本地素材优先
+network_asset = false
+local_asset_first = true
+
+[deepseek]
+base_url = "https://api.deepseek.com"
+# 官方当前模型：deepseek-flash / deepseek-v4-pro（可用 list_models() 核对）。
+# deepseek-chat / deepseek-reasoner 已退役，勿用。
+model = "deepseek-flash"
+timeout = 60
+max_retries = 2
+# 默认关闭 thinking：正文直接可用、更便宜更快；需要深度推理时改为 true
+thinking_enabled = false
+# 官方高峰时段 UTC 小时（周一至周五，中国节假日除外），高峰价为 2 倍。
+peak_hours_utc = [1, 2, 3, 6, 7, 8, 9]
+peak_multiplier = 2.0
+
+# 价格表：官方美元 USD / 1M tokens。基准为非高峰、cache miss。
+# 来源 https://api-docs.deepseek.com/quick_start/pricing（2026-11-25 核对）。
+# 价格可配置、不写死在代码中；无条目时费用记 0 并标记「估算」，不伪装精确账单。
+[pricing.deepseek-flash]
+currency = "USD"
+input_per_million = 0.15
+output_per_million = 0.60
+input_cache_hit_per_million = 0.003
+
+[pricing.deepseek-v4-pro]
+currency = "USD"
+input_per_million = 0.66
+output_per_million = 1.98
+input_cache_hit_per_million = 0.022
+
+# ===== 本地配音（Piper）=====
+# Piper 引擎未在项目中预装：未检测到时 PetAI 会明确报错并提示上传配音，
+# 绝不会自动切换到在线/付费 TTS。请自行安装 Piper 并下载合规许可的声音模型。
+[tts]
+engine = "piper"
+piper_executable = ""        # 留空则从 PATH 查找；也可填绝对路径
+piper_model_zh = ""          # 中文语音模型 .onnx 路径（如 zh_CN-huayan-medium）
+piper_model_en = ""          # 英文语音模型 .onnx 路径（如 en_US-lessac-medium）
+volume = 1.0
+rate = 1.0
+allow_upload_fallback = true # Piper 不可用时允许用户上传自己的配音
+
+# ===== 视频生产：固定 9:16 竖屏 1080x1920 =====
+[video]
+aspect = "9:16"
+width = 1080
+height = 1920
+clip_duration = 5            # 单个素材片段时长（秒），成片默认 30~60s 由脚本决定
+font_name = "STHeitiMedium.ttc"
+subtitle_enabled = true
+bgm_type = "random"          # 使用 MPT 内置本地 BGM，非付费服务
+logo_path = ""               # 品牌 Logo（可选）

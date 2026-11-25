@@ -1,0 +1,20 @@
+# Pet AI Content Factory 依赖说明
+#
+# 重要：PetAI 不引入任何新的第三方依赖。
+# 以下依赖全部已由 MoneyPrinterTurbo v1.3.10 的 pyproject.toml / uv.lock 锁定，
+# 安装原项目依赖后即可直接运行 PetAI。此文件仅作依赖澄清，不作为独立安装源。
+#
+#   openai>=2.24        -> deepseek_service（DeepSeek OpenAI 兼容接口）
+#   toml>=0.10          -> config/settings.py
+#   imageio-ffmpeg>=0.6 -> tts_service 音量处理 / 复用 MPT ffmpeg 解析
+#   faster-whisper>=1.1 -> subtitle_service 的可选 whisper 字幕（本地模型）
+#   moviepy==2.2.1      -> 通过复用 MPT 合成引擎间接使用
+#   pytest>=9           -> PetAI 测试（原项目 dev 依赖组已包含）
+#
+# 安装方式（在项目根目录执行，与原项目共用同一环境）：
+#   uv sync --frozen          # 推荐：按 uv.lock 锁定版本
+#   pip install -e .          # 或：按 pyproject.toml 安装
+#
+# 完全不需要安装：Piper、CUDA、任何付费 SDK。
+# Piper 为可选本地 TTS：如需启用，请自行安装 Piper 并下载合规许可的声音模型，
+# 随后在 petai.toml 配置 [tts].piper_executable 与模型路径；未安装时用上传配音兜底。
