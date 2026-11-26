@@ -17,8 +17,16 @@ from typing import Any
 
 import streamlit as st
 
-# 允许 `streamlit run PetAI/webui.py` 直接运行
+# 允许 `streamlit run PetAI/webui.py` 直接运行。
+# 注意：Streamlit 会把脚本目录（PetAI）放进 sys.path 前面，导致 `import app`
+# 解析到 PetAI/app（那里面没有 utils），运行到合成时会报 No module named 'app.utils'。
+# 所以这里明确移除脚本目录，让项目根优先，保证 `app` 指向 MoneyPrinterTurbo 的包。
 _ROOT = Path(__file__).resolve().parents[1]
+_SCRIPT_DIR = str(Path(__file__).resolve().parent)
+sys.path[:] = [
+    p for p in sys.path
+    if not p or str(Path(p).resolve()) != str(Path(_SCRIPT_DIR).resolve())
+]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
@@ -216,6 +224,20 @@ def _topic_options(app, limit: int = 200) -> list[dict[str, Any]]:
     return app.topics.list(limit=limit)
 
 
+def _script_engine(app) -> str:
+    """读取脚本引擎；旧进程/旧模块没有该属性时退回豆包，避免整页崩溃。"""
+    value = getattr(app.scripts, "script_engine", None)
+    if value:
+        return str(value)
+    try:
+        engine = str(
+            app.config.get("script", "engine", "doubao-desktop") or "doubao-desktop"
+        ).strip()
+    except Exception:  # noqa: BLE001 - 兜底不能再次抛错
+        return "doubao-desktop"
+    return engine if engine in ("doubao-desktop", "deepseek") else "doubao-desktop"
+
+
 def _script_record(app, script_id: str) -> dict[str, Any]:
     return (app.scripts.get(script_id) or {}) if script_id else {}
 
@@ -362,6 +384,8 @@ def page_auto(app) -> None:
     st.markdown(
         f"**{topic.get('title', '')}** · {result.get('category_label', '')}"
     )
+    if result.get("topic_switched"):
+        st.info("原选题命中 C 级高风险内容，已自动改用下一个候选选题继续生产。")
     if result.get("data_source"):
         st.caption(f"趋势来源：{result['data_source']}")
     if result.get("risk"):
@@ -457,7 +481,7 @@ def _wizard_topic(app) -> None:
 
 def _wizard_script(app) -> None:
     st.subheader("第 2 步 · 生成中英双语脚本")
-    engine = app.scripts.script_engine
+    engine = _script_engine(app)
     engine_label = "桌面豆包（免费）" if engine == "doubao-desktop" else "DeepSeek（付费）"
     st.caption(f"当前文本引擎：{engine_label}。英文按当地表达习惯本地化改写，不是逐字翻译。")
     topic = app.topics.get(st.session_state.w_topic_id)
@@ -910,7 +934,7 @@ def _wizard_video(app) -> None:
     storyboard_zh = _current_storyboard(app, "zh")
     storyboard_en = _current_storyboard(app, "en") or storyboard_zh
     st.caption(
-        f"选题：{_short(app.topics.get(st.session_state.w_topic_id, {}).get('title',''), 30)} · "
+        f"选题：{_short((app.topics.get(st.session_state.w_topic_id) or {}).get('title',''), 30)} · "
         f"分镜 {len(storyboard_zh)} 个 · 素材 {len(mats)} 个 · "
         f"中文配音 {'有' if st.session_state.w_voice_zh else '无'} · "
         f"英文配音 {'有' if st.session_state.w_voice_en else '无'}"
@@ -1118,7 +1142,7 @@ def page_knowledge(app) -> None:
 
 def page_scripts(app) -> None:
     st.title("脚本工厂")
-    engine = app.scripts.script_engine
+    engine = _script_engine(app)
     st.caption(
         "中英双语脚本：英文按当地习惯本地化改写，不是逐字翻译。"
         f"当前文本引擎：{'桌面豆包（免费）' if engine == 'doubao-desktop' else 'DeepSeek（付费，需手动开启）'}"
@@ -1299,7 +1323,7 @@ def page_status(app) -> None:
 
     st.subheader("本地链路")
     tts = app.tts.capabilities()
-    engine = app.scripts.script_engine
+    engine = _script_engine(app)
     doubao_text, _ = _doubao_status(app)
     if tts.get("sapi_available"):
         voice = "Windows SAPI（离线免费）"
@@ -1361,7 +1385,7 @@ def page_settings(app) -> None:
     )
 
     st.subheader("引擎总览")
-    engine = app.scripts.script_engine
+    engine = _script_engine(app)
     tts_caps = app.tts.capabilities()
     c1, c2, c3 = st.columns(3)
     c1.metric("文本生成", "桌面豆包" if engine == "doubao-desktop" else "DeepSeek（付费）")

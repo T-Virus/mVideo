@@ -84,29 +84,59 @@ class PipelineService:
 
         # 2) 中英脚本 + 分镜
         emit(2, f"{STEPS[1]}（中英各约 25 秒）…")
-        try:
+
+        def generate_for(candidate: dict[str, Any]) -> tuple[Any, Any]:
             if with_english:
                 pair = self.scripts.generate_bilingual(
-                    topic["topic_id"], task_id=task_id
+                    candidate["topic_id"], task_id=task_id
                 )
-                zh, en = pair[LANG_ZH], pair[LANG_EN]
-            else:
-                zh = self.scripts.generate(
-                    topic["topic_id"], LANG_ZH, task_id=task_id
-                )
-                en = None
+                return pair[LANG_ZH], pair[LANG_EN]
+            return (
+                self.scripts.generate(candidate["topic_id"], LANG_ZH, task_id=task_id),
+                None,
+            )
+
+        def risk_of(candidate: dict[str, Any], script: dict[str, Any]) -> str:
+            return self.knowledge.classify_risk(
+                str(candidate.get("title") or ""), str(script.get("content") or "")
+            )
+
+        try:
+            zh, en = generate_for(topic)
         except Exception as exc:
             raise RuntimeError(f"第 2 步失败（脚本生成）：{exc}") from exc
 
-        # 3) 风险检查（C 级一律停）
+        # 3) 风险检查：C 级先自动换候选选题，仍不行才停（安全红线不绕过）
         emit(3, f"{STEPS[2]}…")
-        risk = self.knowledge.classify_risk(
-            str(topic.get("title") or ""), str(zh.get("content") or "")
-        )
+        risk = risk_of(topic, zh)
+        switched = False
+        if risk == RISK_C:
+            alternatives = [
+                item
+                for item in found["items"][1:]
+                if item.get("topic_id") != topic.get("topic_id")
+            ]
+            for alt in alternatives:
+                logger.warning(
+                    "选题命中 C 级，自动换候选：%s -> %s",
+                    topic.get("title"),
+                    alt.get("title"),
+                )
+                try:
+                    alt_zh, alt_en = generate_for(alt)
+                except Exception as exc:  # noqa: BLE001 - 备选失败就试下一个
+                    logger.warning("备选选题脚本生成失败：%s", exc)
+                    continue
+                alt_risk = risk_of(alt, alt_zh)
+                if alt_risk != RISK_C:
+                    topic, zh, en, risk = alt, alt_zh, alt_en, alt_risk
+                    switched = True
+                    break
         if risk == RISK_C:
             raise RuntimeError(
-                "第 3 步拦截：脚本命中 C 级高风险内容（用药/剂量/急症等），"
-                "已停止自动流程。请到「知识库与审核」人工核查后再生成。"
+                "第 3 步拦截：候选选题均命中 C 级高风险内容（用药/剂量/急症等），"
+                "已自动尝试其他候选仍未通过。建议改选「萌宠娱乐」或「宠物用品与生活」分类，"
+                "或到「知识库与审核」人工核查。"
             )
 
         # 4) 按分镜准备素材：豆包优先，失败回退本地
@@ -200,6 +230,7 @@ class PipelineService:
             "topic": topic,
             "scripts": {LANG_ZH: zh, LANG_EN: en},
             "risk": risk,
+            "topic_switched": switched,
             "materials": materials,
             "material_source": material_source,
             "videos": videos,

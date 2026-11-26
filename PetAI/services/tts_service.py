@@ -213,9 +213,9 @@ class TTSService:
     @staticmethod
     def _apply_volume(wav_path: Path, volume: float) -> None:
         """用 ffmpeg 调整音量（就地处理，临时文件原子替换）。"""
-        from app.utils import utils as mpt_utils  # 复用 MPT 的 ffmpeg 解析
+        from PetAI.utils.ffmpeg import ffmpeg_binary
 
-        ffmpeg = mpt_utils.get_ffmpeg_binary()
+        ffmpeg = ffmpeg_binary()
         tmp = wav_path.with_suffix(".vol.wav")
         cmd = [
             ffmpeg, "-y", "-i", str(wav_path),

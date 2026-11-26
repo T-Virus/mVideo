@@ -28,7 +28,7 @@
       ],
       "license": "豆包免费生成（商用授权需用户自行向平台确认）",
       "source": "doubao-desktop-free",
-      "usage_count": 0,
+      "usage_count": 1,
       "created_at": "2026-11-25T17:41:01"
     },
     {
@@ -45,7 +45,7 @@
       ],
       "license": "豆包免费生成（商用授权需用户自行向平台确认）",
       "source": "doubao-desktop-free",
-      "usage_count": 0,
+      "usage_count": 1,
       "created_at": "2026-11-25T17:42:44"
     },
     {
@@ -62,7 +62,7 @@
       ],
       "license": "豆包免费生成（商用授权需用户自行向平台确认）",
       "source": "doubao-desktop-free",
-      "usage_count": 0,
+      "usage_count": 1,
       "created_at": "2026-11-25T17:43:39"
     },
     {
@@ -79,7 +79,7 @@
       ],
       "license": "豆包免费生成（商用授权需用户自行向平台确认）",
       "source": "doubao-desktop-free",
-      "usage_count": 0,
+      "usage_count": 1,
       "created_at": "2026-11-25T17:45:41"
     },
     {
@@ -96,7 +96,7 @@
       ],
       "license": "豆包免费生成（商用授权需用户自行向平台确认）",
       "source": "doubao-desktop-free",
-      "usage_count": 0,
+      "usage_count": 1,
       "created_at": "2026-11-25T17:46:36"
     },
     {
@@ -113,8 +113,382 @@
       ],
       "license": "豆包免费生成（商用授权需用户自行向平台确认）",
       "source": "doubao-desktop-free",
-      "usage_count": 0,
+      "usage_count": 1,
       "created_at": "2026-11-25T17:47:32"
+    },
+    {
+      "asset_id": "5ec2c111a3a84f27a06d417f68624823",
+      "filename": "可爱狗狗摇尾博主出镜图.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\可爱狗狗摇尾博主出镜图.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\可爱狗狗摇尾博主出镜图.png",
+      "tags": [
+        "scene-1",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:29:16"
+    },
+    {
+      "asset_id": "3022f2526695424288af1fb41f4b831c",
+      "filename": "狗狗头部和尾巴特写科普图.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\狗狗头部和尾巴特写科普图.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\狗狗头部和尾巴特写科普图.png",
+      "tags": [
+        "scene-2",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:30:13"
+    },
+    {
+      "asset_id": "e7860e49f38747edb09801e142641840",
+      "filename": "生成狗狗主题图片.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\生成狗狗主题图片.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\生成狗狗主题图片.png",
+      "tags": [
+        "scene-3",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:31:10"
+    },
+    {
+      "asset_id": "55aa7cedcf40422abe7b2af42716c81e",
+      "filename": "竖屏写实狗狗摄影.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\竖屏写实狗狗摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\竖屏写实狗狗摄影.png",
+      "tags": [
+        "scene-4",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:32:07"
+    },
+    {
+      "asset_id": "8e47226c4ec144368d61bcb7baa32bd5",
+      "filename": "狗狗夹尾躲避特写.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\狗狗夹尾躲避特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\狗狗夹尾躲避特写.png",
+      "tags": [
+        "scene-5",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:33:03"
+    },
+    {
+      "asset_id": "daa3126508c84c76950c4708d4d7768b",
+      "filename": "生成狗狗主题图片 (1).png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\生成狗狗主题图片 (1).png",
+      "original_path": "C:\\Users\\LW\\Downloads\\生成狗狗主题图片 (1).png",
+      "tags": [
+        "scene-6",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:34:00"
+    },
+    {
+      "asset_id": "e77396a515f948e29da0a33d8b639cc8",
+      "filename": "可爱猫咪歪头卖萌转警示提示图.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\可爱猫咪歪头卖萌转警示提示图.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\可爱猫咪歪头卖萌转警示提示图.png",
+      "tags": [
+        "scene-1",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:43:19"
+    },
+    {
+      "asset_id": "f3b2139f4cf443a1bd0ce9e61c7f4a00",
+      "filename": "猫咪甩头抓耳特写.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪甩头抓耳特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪甩头抓耳特写.png",
+      "tags": [
+        "scene-2",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 1,
+      "created_at": "2026-11-25T21:44:12"
+    },
+    {
+      "asset_id": "6237920c094248d6913bf830f4e17dda",
+      "filename": "猫咪躲避抚摸.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪躲避抚摸.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪躲避抚摸.png",
+      "tags": [
+        "scene-3",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T21:45:07"
+    },
+    {
+      "asset_id": "6017067e575544478ed178e19443bc49",
+      "filename": "竖屏写实猫咪舔舐特写.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\竖屏写实猫咪舔舐特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\竖屏写实猫咪舔舐特写.png",
+      "tags": [
+        "scene-4",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T21:46:04"
+    },
+    {
+      "asset_id": "6337b8e049954cf3840a501840b621ad",
+      "filename": "猫咪踮脚受伤摄影.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪踮脚受伤摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪踮脚受伤摄影.png",
+      "tags": [
+        "scene-5",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T21:47:00"
+    },
+    {
+      "asset_id": "9dd6b4ef23cc49efa3487508e7488e45",
+      "filename": "写实猫咪特写摄影.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\写实猫咪特写摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\写实猫咪特写摄影.png",
+      "tags": [
+        "scene-6",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T21:47:58"
+    },
+    {
+      "asset_id": "7cbce452f0154df89aee1f05f1f87137",
+      "filename": "猫咪降温提示图生成需求.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪降温提示图生成需求.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪降温提示图生成需求.png",
+      "tags": [
+        "scene-1",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:05:34"
+    },
+    {
+      "asset_id": "4e1b4a04a71f4db18361b442686f810b",
+      "filename": "猫咪钻被子特写.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪钻被子特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪钻被子特写.png",
+      "tags": [
+        "scene-2",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:06:29"
+    },
+    {
+      "asset_id": "9a08b02b6250497eb1c0fc3e6d335f43",
+      "filename": "竖屏写实猫咪蜷缩特写.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\竖屏写实猫咪蜷缩特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\竖屏写实猫咪蜷缩特写.png",
+      "tags": [
+        "scene-3",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:07:23"
+    },
+    {
+      "asset_id": "701708a4d5af4c668daee2454d0ad8c2",
+      "filename": "手触猫咪肉垫特写.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\手触猫咪肉垫特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\手触猫咪肉垫特写.png",
+      "tags": [
+        "scene-4",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:08:17"
+    },
+    {
+      "asset_id": "60ed096065124a208bd41e6795b12351",
+      "filename": "猫咪依偎主人取暖.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪依偎主人取暖.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪依偎主人取暖.png",
+      "tags": [
+        "scene-5",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:09:16"
+    },
+    {
+      "asset_id": "90c1cc6c2ec04cc8ae6eaacae0a2f1d4",
+      "filename": "猫咪暖窝写实摄影.png",
+      "category": "cat_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\cats\\猫咪暖窝写实摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\猫咪暖窝写实摄影.png",
+      "tags": [
+        "scene-6",
+        "doubao-cat",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:10:15"
+    },
+    {
+      "asset_id": "e68e9a14363942ac9c88aec5ab905780",
+      "filename": "小狗蹭屁股主人疑惑.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\小狗蹭屁股主人疑惑.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\小狗蹭屁股主人疑惑.png",
+      "tags": [
+        "scene-1",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:43:29"
+    },
+    {
+      "asset_id": "10b7900e78a44b33a76ca6e4fd659fad",
+      "filename": "狗狗蹭屁股慢放特写.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\狗狗蹭屁股慢放特写.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\狗狗蹭屁股慢放特写.png",
+      "tags": [
+        "scene-2",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:44:22"
+    },
+    {
+      "asset_id": "90c17044bf1845b9ae93c8fb7d4d14ef",
+      "filename": "竖屏写实狗狗回头咬屁股摄影.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\竖屏写实狗狗回头咬屁股摄影.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\竖屏写实狗狗回头咬屁股摄影.png",
+      "tags": [
+        "scene-3",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:45:18"
+    },
+    {
+      "asset_id": "c2a9d5ff387f4e4780d7b1b16158ca34",
+      "filename": "宠物健康示意图.png",
+      "category": "dog_image",
+      "kind": "image",
+      "path": "D:\\Code\\MoneyPrinterTurbo-main\\PetAI\\storage\\dogs\\宠物健康示意图.png",
+      "original_path": "C:\\Users\\LW\\Downloads\\宠物健康示意图.png",
+      "tags": [
+        "scene-4",
+        "doubao-dog",
+        "doubao-image"
+      ],
+      "license": "豆包免费生成（商用授权需用户自行向平台确认）",
+      "source": "doubao-desktop-free",
+      "usage_count": 0,
+      "created_at": "2026-11-25T22:46:14"
     }
   ]
 }

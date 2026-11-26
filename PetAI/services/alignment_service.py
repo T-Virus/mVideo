@@ -142,9 +142,9 @@ def align_srt_to_duration(
 
 
 def _ffmpeg_binary() -> str:
-    from app.utils import utils as mpt_utils
+    from PetAI.utils.ffmpeg import ffmpeg_binary
 
-    return mpt_utils.get_ffmpeg_binary()
+    return ffmpeg_binary()
 
 
 def _has_media_signature(path: Path) -> bool:

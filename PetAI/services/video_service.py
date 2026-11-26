@@ -133,9 +133,9 @@ class VideoService:
         if not source.is_file():
             return None
         try:
-            from app.utils import utils as mpt_utils
+            from PetAI.utils.ffmpeg import ffmpeg_binary
 
-            ffmpeg = mpt_utils.get_ffmpeg_binary()
+            ffmpeg = ffmpeg_binary()
         except Exception:
             return None
         frames = self.export_root / "frames"
@@ -187,9 +187,9 @@ class VideoService:
 
     def _image_to_clip(self, image: Path, production_id: str, index: int) -> str:
         """用项目自带的 FFmpeg 把单张图片编码成 9:16 静帧 mp4。"""
-        from app.utils import utils as mpt_utils
+        from PetAI.utils.ffmpeg import ffmpeg_binary
 
-        ffmpeg = mpt_utils.get_ffmpeg_binary()
+        ffmpeg = ffmpeg_binary()
         frames_dir = self.export_root / "frames"
         frames_dir.mkdir(parents=True, exist_ok=True)
         out = frames_dir / f"frame-{production_id[:8]}-{index}.mp4"
